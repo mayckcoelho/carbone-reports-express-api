@@ -25,8 +25,12 @@ app.get('/', function(req, res){
     res.json({"tutorial" : "Esta é a Api do G-Publicadores!"});
 });
 
+app.use(function (req,res,next) { 
+    req.url = req.url.replace(/[/]+/g, '/'); next(); 
+});
+
 // public route
-app.use('//users', validateUser, users);
+app.use('/users', validateUser, users);
 app.use('/grupos', validateUser, grupos);
 app.use('/publicadores', validateUser, publicadores);
 app.use('/registros', validateUser, registros);
