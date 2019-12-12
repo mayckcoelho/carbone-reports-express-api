@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', function(req, res){
-    res.json({"tutorial" : "Build REST API with node.js"});
+    res.json({"tutorial" : "Esta é a Api do G-Publicadores!"});
 });
 
 // public route
