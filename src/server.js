@@ -61,7 +61,7 @@ app.use(function(err, req, res, next) {
     console.log(err);
     
      if(err.status === 404)
-      res.status(404).json({status: "error", message: "Not found", request: JSON.stringify(req) });
+        res.status(404).json({status: "error", message: "Not found", request: req });
      else 
        res.status(500).json({status: "error", message: err.message});
 });
