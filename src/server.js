@@ -14,7 +14,7 @@ app.set('secretKey', 'nodeRestApi'); // jwt secret token
 
 app.use(cors());
 
-mongoose.connect('mongodb://publicadores01:oministack@mongodb.publicadores.tjcampestre.com.br/publicadores01?retryWrites=true&w=majority', {
+mongoose.connect('mongodb://publicadores01:oministack@mongo71-farm76.kinghost.net/publicadores01?retryWrites=true&w=majority', {
     useNewUrlParser: true,
 });
 
