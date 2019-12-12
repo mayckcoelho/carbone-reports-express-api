@@ -26,7 +26,7 @@ app.get('/', function(req, res){
 });
 
 // public route
-app.use('/users', users);
+app.use('/users', validateUser, users);
 app.use('/grupos', validateUser, grupos);
 app.use('/publicadores', validateUser, publicadores);
 app.use('/registros', validateUser, registros);
