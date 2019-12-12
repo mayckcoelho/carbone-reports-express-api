@@ -26,7 +26,7 @@ app.get('/', function(req, res){
 });
 
 // public route
-app.use('/api/users', validateUser, users);
+app.use('/users', validateUser, users);
 app.use('/grupos', validateUser, grupos);
 app.use('/publicadores', validateUser, publicadores);
 app.use('/registros', validateUser, registros);
@@ -61,7 +61,7 @@ app.use(function(err, req, res, next) {
     console.log(err);
     
      if(err.status === 404)
-      res.status(404).json({status: "error", message: "Not found"});
+      res.status(404).json({status: "error", message: "Not found", req});
      else 
        res.status(500).json({status: "error", message: err.message});
 });
