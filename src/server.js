@@ -72,4 +72,4 @@ app.use(function(err, req, res, next) {
 
 const port = process.env.PORT_API_SRC_SERVER || 3001
 
-app.listen(port, function(){ console.log(`Node server listening on port ${port}`);});
+app.listen(port, function(){ console.log(`Node server listening on port ${port}`, process.env);});
