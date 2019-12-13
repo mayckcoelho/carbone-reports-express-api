@@ -70,6 +70,6 @@ app.use(function(err, req, res, next) {
        res.status(500).json({status: "error", message: err.message});
 });
 
-const port = process.env.PORT_API_SRC_SERVER || 3001
+const port = process.env.PORT_API_SRC_SERVER || 3000
 
 app.listen(port, function(){ console.log(`Node server listening on port ${port}`); console.log(JSON.stringify(process.env));});
