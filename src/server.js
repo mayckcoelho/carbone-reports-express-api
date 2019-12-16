@@ -1,3 +1,17 @@
+var fs = require('fs');
+var https = require('https');
+
+// Certificate
+const privateKey = fs.readFileSync('/home/tjcampestre/certificado/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/home/tjcampestre/certificado/cert.pem', 'utf8');
+const ca = fs.readFileSync('/home/tjcampestre/certificado/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
+
 const express = require('express');
 const users = require('./routes/users');
 const grupos = require('./routes/grupos');
@@ -14,7 +28,7 @@ app.set('secretKey', 'nodeRestApi'); // jwt secret token
 
 app.use(cors());
 
-mongoose.connect('mongodb://publicadores01:oministack@mongodb.tjcampestre.com.br/publicadores01?retryWrites=true&w=majority', {
+mongoose.connect('mongodb://publicadores01:oministack@mongo71-farm76.kinghost.net/publicadores01?retryWrites=true&w=majority', {
     useNewUrlParser: true,
 });
 
@@ -72,4 +86,6 @@ app.use(function(err, req, res, next) {
 
 const port = process.env.PORT_BACKEND_SRC_SERVER || 21147
 
-app.listen(port, function(){ console.log(`Node server listening on port ${port}`);});
+const httpsServer = https.createServer(credentials,app)
+
+httpsServer.listen(port, function(){ console.log(`Node server listening on port ${port}`);});
