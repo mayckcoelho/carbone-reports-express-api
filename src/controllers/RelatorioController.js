@@ -15,8 +15,7 @@ class RelatorioController {
                 next(err);
             } else { 
                 Relatorio.countDocuments({}, function(err, count) {
-                    res.setHeader('x-total-count', count);
-                    res.status(200).json(relatorioInfo);
+                    res.status(200).json({ data: relatorioInfo, total: count });
                 })
             }
         });

@@ -23,8 +23,7 @@ class UserController {
                 next(err);
             } else { 
                 User.countDocuments(filter, function(err, count) {
-                    res.setHeader('x-total-count', count);
-                    res.status(200).json(userInfo);
+                    res.status(200).json({ data: userInfo, total: count });
                 })
             }
         });

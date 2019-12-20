@@ -17,8 +17,7 @@ class PublicadorController {
                 next(err);
             } else { 
                 Publicador.countDocuments(filter, function(err, count) {
-                    res.setHeader('x-total-count', count);
-                    res.status(200).json(publicadorInfo);
+                    res.status(200).json({ data: publicadorInfo, total: count });
                 })
             }
         });
