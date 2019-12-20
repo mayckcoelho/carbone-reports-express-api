@@ -19,7 +19,10 @@ class GrupoController {
             if (err) {
                 next(err);
             } else { 
-                res.status(200).json(grupoInfo);
+                Grupo.countDocuments(filter, function(err, count) {
+                    res.setHeader('x-total-count', count);
+                    res.status(200).json(grupoInfo);
+                })
             }
         });
     }

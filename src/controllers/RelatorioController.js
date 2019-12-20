@@ -13,7 +13,10 @@ class RelatorioController {
             if (err) {
                 next(err);
             } else { 
-                res.status(200).json(relatorioInfo);
+                Relatorio.countDocuments(filter, function(err, count) {
+                    res.setHeader('x-total-count', count);
+                    res.status(200).json(relatorioInfo);
+                })
             }
         }).populate('publicador', 'nome');
     }
