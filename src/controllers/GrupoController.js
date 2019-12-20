@@ -8,11 +8,11 @@ class GrupoController {
         const filter = { }
         if (req.query.nome)
             filter['nome'] = new RegExp(req.query.nome, "i")
-
+        
         if (req.query.responsavel)
             filter['responsavel'] = new RegExp(req.query.responsavel, "i")
 
-        await Grupo.find(filer)
+        await Grupo.find(filter)
         .skip(parseInt(offset))
         .limit(parseInt(limit))
         .exec(function (err, grupoInfo) {

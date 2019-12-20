@@ -9,16 +9,17 @@ class RelatorioController {
         await Relatorio.find()
         .skip(parseInt(offset))
         .limit(parseInt(limit))
+        .populate('publicador', 'nome')
         .exec(function (err, relatorioInfo) {
             if (err) {
                 next(err);
             } else { 
-                Relatorio.countDocuments(filter, function(err, count) {
+                Relatorio.countDocuments({}, function(err, count) {
                     res.setHeader('x-total-count', count);
                     res.status(200).json(relatorioInfo);
                 })
             }
-        }).populate('publicador', 'nome');
+        });
     }
 
     async listOne(req, res, next) {
