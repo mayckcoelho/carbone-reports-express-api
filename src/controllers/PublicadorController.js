@@ -2,7 +2,17 @@ const Publicador = require('../models/Publicadores');
 
 class PublicadorController {
     async list (req, res, next) {
-        await Publicador.find({}, function (err, publicadorInfo) {
+        const limit = req.query.limit || 10
+        const offset = req.query.offset || 0
+
+        const filter = { }
+        if (req.query.nome)
+            filter['nome'] = new RegExp(req.query.nome, "i")
+
+        await Publicador.find(filter)
+        .skip(parseInt(offset))
+        .limit(parseInt(limit))
+        .exec(function (err, publicadorInfo) {
             if (err) {
                 next(err);
             } else { 

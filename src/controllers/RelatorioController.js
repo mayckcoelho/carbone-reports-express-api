@@ -3,7 +3,13 @@ const Relatorio = require('../models/Relatorios');
 class RelatorioController {
     
     async list (req, res, next) {
-        await Relatorio.find({ }, function (err, relatorioInfo) {
+        const limit = req.query.limit || 10
+        const offset = req.query.offset || 0
+
+        await Relatorio.find()
+        .skip(parseInt(offset))
+        .limit(parseInt(limit))
+        .exec(function (err, relatorioInfo) {
             if (err) {
                 next(err);
             } else { 
