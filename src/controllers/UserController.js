@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 
 class UserController {
     async list (req, res, next) {
-        const limit = req.query.limit || 2
-        const offset = req.query.offset || 0
+        const limit = parseInt(req.query.limit) || undefined
+        const offset = parseInt(req.query.offset) || 0
 
         const filter = { }
         if (req.query.name)
@@ -16,8 +16,8 @@ class UserController {
             filter['email'] = new RegExp(req.query.email, "i")
 
         await User.find(filter)
-        .skip(parseInt(offset))
-        .limit(parseInt(limit))
+        .skip(offset)
+        .limit(limit)
         .exec(function (err, userInfo) {
             if (err) {
                 next(err);

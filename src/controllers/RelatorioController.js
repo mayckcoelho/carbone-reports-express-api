@@ -3,12 +3,12 @@ const Relatorio = require('../models/Relatorios');
 class RelatorioController {
     
     async list (req, res, next) {
-        const limit = req.query.limit || 10
-        const offset = req.query.offset || 0
+        const limit = parseInt(req.query.limit) || undefined
+        const offset = parseInt(req.query.offset) || 0
 
         await Relatorio.find()
-        .skip(parseInt(offset))
-        .limit(parseInt(limit))
+        .skip(offset)
+        .limit(limit)
         .populate('publicador', 'nome')
         .exec(function (err, relatorioInfo) {
             if (err) {

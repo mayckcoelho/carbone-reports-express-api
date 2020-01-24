@@ -2,8 +2,8 @@ const Grupo = require('../models/Grupos');
 
 class GrupoController {
     async list (req, res, next) {
-        const limit = req.query.limit || 10
-        const offset = req.query.offset || 0
+        const limit = parseInt(req.query.limit) || undefined
+        const offset = parseInt(req.query.offset) || 0
 
         const filter = { }
         if (req.query.nome)
@@ -13,8 +13,8 @@ class GrupoController {
             filter['responsavel'] = new RegExp(req.query.responsavel, "i")
 
         await Grupo.find(filter)
-        .skip(parseInt(offset))
-        .limit(parseInt(limit))
+        .skip(offset)
+        .limit(limit)
         .exec(function (err, grupoInfo) {
             if (err) {
                 next(err);
