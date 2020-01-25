@@ -1,5 +1,6 @@
 const Relatorio = require('../models/Relatorios');
 const Publicador = require('../models/Publicadores');
+const moment = require('moment')
 const fs = require('fs');
 const carbone = require('carbone');
 
@@ -50,21 +51,25 @@ class RelatorioController {
                 next(err);
             } else {
                 const data = {
-                    dados: relatorioInfo
+                    dados: []
                 }
 
-                carbone.render('./src/templates/ReportTemplate.xlsx', data, function (err, result) {
+                relatorioInfo.map(rel => {
+                    data.dados.push({ ...rel.toObject(), mesAno: moment(rel.mesAno).format('MM/YYYY')})
+                })
+
+                carbone.render('./backend/src/templates/ReportTemplate.xlsx', data, function (err, result) {
                     if (err) {
-                        res.status(400).json({ status: "error", message: "Relatório não gerado!" })
+                        res.status(400).json({ status: "error", message: `Relatório não gerado! (${err})` })
                     }
 
-                    const dir = './src/reports'
+                    const dir = './backend/src/reports'
 
                     if (!fs.existsSync(dir)) {
                         fs.mkdirSync(dir);
                     }
 
-                    const filePath = `./src/reports/Relatorio${Date.now()}.xlsx`
+                    const filePath = `./backend/src/reports/Relatorio${Date.now()}.xlsx`
                     // write the result
                     fs.writeFileSync(filePath, result);
                     res.download(filePath)
