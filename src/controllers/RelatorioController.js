@@ -1,12 +1,51 @@
 const Relatorio = require('../models/Relatorios');
+const Publicador = require('../models/Publicadores');
 
 class RelatorioController {
     
     async list (req, res, next) {
         const limit = parseInt(req.query.limit) || undefined
         const offset = parseInt(req.query.offset) || 0
+        const publicadores = req.query.publicador ? req.query.publicador.split(',') : []
 
-        await Relatorio.find()
+        // filtra publicadores dos grupos
+        const filterPublicadores = { }
+        if (req.query.grupo || req.query.privilegio) {
+            if (req.query.grupo)
+                filterPublicadores["id_grupo"] = { $in: req.query.grupo.split(',')}
+
+            if (req.query.privilegio)
+                filterPublicadores['privilegio'] = new RegExp(req.query.privilegio, "i")
+
+            const publicadorInfo = await Publicador.find(filterPublicadores);
+
+            publicadorInfo.map(pub => {
+                if (!publicadores.includes(pub._id))
+                    publicadores.push(pub._id)
+            })
+        }
+
+        const filter = { }
+        if (publicadores.length > 0) {
+            filter["publicador"] = { $in: publicadores }
+        }
+
+        if (req.query.inicio || req.query.fim) {
+            filter['mesAno'] = { }
+            if (req.query.inicio) {
+                const [mes, ano] = req.query.inicio.split('/')
+                filter['mesAno']['$gte'] = new Date(ano, mes, 1)
+            }
+
+            if (req.query.fim) {
+                const [mes, ano] = req.query.fim.split('/')
+                filter['mesAno']['$lte'] = new Date(ano, mes, 1)
+            }
+        }
+
+        //console.log(filter)
+
+        await Relatorio.find(filter)
         .skip(offset)
         .limit(limit)
         .populate('publicador', 'nome')
@@ -14,7 +53,7 @@ class RelatorioController {
             if (err) {
                 next(err);
             } else { 
-                Relatorio.countDocuments({}, function(err, count) {
+                Relatorio.countDocuments(filter, function(err, count) {
                     res.status(200).json({ data: relatorioInfo, total: count });
                 })
             }

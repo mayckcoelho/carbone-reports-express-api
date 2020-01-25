@@ -8,7 +8,7 @@ class PublicadorController {
         const filter = { }
         if (req.query.nome)
             filter['nome'] = new RegExp(req.query.nome.toLowerCase(), "i")
-        console.log(filter['nome'])
+            
         await Publicador.find(filter)
         .skip(offset)
         .limit(limit)
