@@ -18,7 +18,7 @@ class RelatorioController {
             if (req.query.privilegio)
                 filterPublicadores['privilegio'] = new RegExp(req.query.privilegio, "i")
 
-            const publicadorInfo = await Publicador.find(filterPublicadores);
+            const publicadorInfo = await Publicador.find(filterPublicadores)
 
             publicadorInfo.map(pub => {
                 if (!publicadores.includes(pub._id))
@@ -50,12 +50,25 @@ class RelatorioController {
             if (err) {
                 next(err);
             } else {
-                const data = {
-                    dados: []
+                let data = {
+                    dados: [],
+                    totais: {
+                        publicacoes: 0,
+                        videos: 0,
+                        horas: 0,
+                        revisitas: 0,
+                        estudos: 0
+                    }
                 }
-
+                
                 relatorioInfo.map(rel => {
                     data.dados.push({ ...rel.toObject(), mesAno: moment(rel.mesAno).format('MM/YYYY')})
+
+                    data.totais.publicacoes += rel.publicacoes;
+                    data.totais.videos += rel.videos;
+                    data.totais.horas += rel.horas;
+                    data.totais.revisitas += rel.revisitas;
+                    data.totais.estudos += rel.estudos;
                 })
 
                 carbone.render('./backend/src/templates/ReportTemplate.xlsx', data, function (err, result) {
