@@ -35,12 +35,15 @@ class RelatorioController {
             filter['mesAno'] = {}
             if (req.query.inicio) {
                 const [mes, ano] = req.query.inicio.split('/')
-                filter['mesAno']['$gte'] = new Date(ano, mes, 1)
+                const dateIni = moment(`${ano}-${mes}-01`)
+
+                filter['mesAno']['$gte'] = dateIni.format('YYYY-MM-DD')
             }
 
             if (req.query.fim) {
                 const [mes, ano] = req.query.fim.split('/')
-                filter['mesAno']['$lte'] = new Date(ano, mes, 1)
+                const dateFim = moment(`${ano}-${mes}-01`)
+                filter['mesAno']['$lte'] = dateFim.add(1, 'months').add(-1, 'days').format('YYYY-MM-DD')
             }
         }
 
@@ -123,16 +126,19 @@ class RelatorioController {
             filter['mesAno'] = {}
             if (req.query.inicio) {
                 const [mes, ano] = req.query.inicio.split('/')
-                filter['mesAno']['$gte'] = new Date(ano, mes, 1)
+                const dateIni = moment(`${ano}-${mes}-01`)
+
+                filter['mesAno']['$gte'] = dateIni.format('YYYY-MM-DD')
             }
 
             if (req.query.fim) {
                 const [mes, ano] = req.query.fim.split('/')
-                filter['mesAno']['$lte'] = new Date(ano, mes, 1)
+                const dateFim = moment(`${ano}-${mes}-01`)
+                filter['mesAno']['$lte'] = dateFim.add(1, 'months').add(-1, 'days').format('YYYY-MM-DD')
             }
         }
 
-        //console.log(filter)
+        //console.log(filter['mesAno'])
 
         await Relatorio.find(filter)
             .skip(offset)
@@ -151,7 +157,7 @@ class RelatorioController {
 
     async listOne(req, res, next) {
         if (req.params.id == null) {
-            res.status(400).json({ status: "error", message: "Um ID para busca deve ser informado!" });
+            res.status(400).json({ status: "error", message: "Um ID para b usca deve ser informado!" });
         } else {
             await Relatorio.findOne({ _id: req.params.id }, function (err, relatorioInfo) {
                 if (err) {
