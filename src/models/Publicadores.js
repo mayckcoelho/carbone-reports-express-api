@@ -17,23 +17,23 @@ const Publicador = new mongoose.Schema({
         type: String,
         enum: ['F', 'M'],
         default: 'M',
-        requird: [true, "Gênero não informado!"]
+        required: [true, "Gênero não informado!"]
     },
     grupo: {
         type: String,
         enum: ['O', 'U'],
         default: 'O',
-        requird: [true, "Grupo de Esperança não informado!"]
+        required: [true, "Grupo de Esperança não informado!"]
     },
     privilegio: {
         type: String,
-        enum: ['A', 'S', 'P']
+        enum: ['A', 'S', 'P', 'R', 'M']
     },
     status: {
         type: String,
-        enum: ['A', 'I'],
+        enum: ['A', 'I', 'M'],
         default: 'A',
-        requird: [true, "Status não informado!"]
+        required: [true, "Status não informado!"]
     },
     id_grupo: { type: mongoose.Schema.Types.ObjectId, ref: "Grupo" }
 }, {

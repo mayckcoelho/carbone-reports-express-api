@@ -11,7 +11,12 @@ const Relatorio = new mongoose.Schema({
     },
     videos: {
         type: Number,
-        default: 0  
+        default: 0
+    },
+    valorTempo: {
+        type: String,
+        enum: ['M', 'H'],
+        default: 'H',
     },
     horas: {
         type: Number,
