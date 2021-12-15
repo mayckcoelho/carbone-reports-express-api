@@ -70,7 +70,7 @@ app.use(function (err, req, res, next) {
   else res.status(500).json({ message: err.message });
 });
 
-const port = process.env.PORT_BACKEND_SRC_SERVER || 21147;
+const port = process.env.PORT || 3000;
 
 // const httpsServer = https.createServer(credentials,app)
 
