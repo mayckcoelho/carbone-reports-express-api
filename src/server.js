@@ -2,9 +2,9 @@
 // var https = require('https');
 
 // // Certificate
-// const privateKey = fs.readFileSync('/home/tjcampestre/certificado/privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('/home/tjcampestre/certificado/cert.pem', 'utf8');
-// const ca = fs.readFileSync('/home/tjcampestre/certificado/chain.pem', 'utf8');
+// const privateKey = fs.readFileSync('/path/to/privkey.pem', 'utf8');
+// const certificate = fs.readFileSync('/path/to/cert.pem', 'utf8');
+// const ca = fs.readFileSync('/path/to/chain.pem', 'utf8');
 
 // const credentials = {
 // 	key: privateKey,
@@ -13,33 +13,22 @@
 // };
 
 const express = require("express");
-const users = require("./routes/users");
-const grupos = require("./routes/grupos");
-const publicadores = require("./routes/publicadores");
-const registros = require("./routes/registros");
+const download = require("./routes/download");
 
-const mongoose = require("mongoose");
 const cors = require("cors");
 
 var jwt = require("jsonwebtoken");
+
+require("dotenv").config();
 const app = express();
 
-app.set("secretKey", "nodeRestApi"); // jwt secret token
-
 app.use(cors());
-
-mongoose.connect(
-  "mongodb://publicadores01:oministack@mongo71-farm10.kinghost.net/publicadores01?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-  }
-);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", function (req, res) {
-  res.json({ tutorial: "Esta é a Api do G-Publicadores!" });
+  res.json({ tutorial: "Esta é a Api de Relatórios do G-Publicadores!" });
 });
 
 app.use(function (req, res, next) {
@@ -48,26 +37,20 @@ app.use(function (req, res, next) {
 });
 
 // public route
-app.use("/users", validateUser, users);
-app.use("/grupos", validateUser, grupos);
-app.use("/publicadores", validateUser, publicadores);
-app.use("/registros", validateUser, registros);
+app.use("/downloads", validateUser, download);
 
 function validateUser(req, res, next) {
-  if (req.url != "/authenticate") {
-    const token = req.headers["authorization"].replace("Bearer ", "");
-    jwt.verify(token, req.app.get("secretKey"), function (err, decoded) {
-      if (err) {
-        res.status(401).json({ status: "error", message: err.message });
-      } else {
-        // add user id to requestss
-        req.body.userId = decoded.id;
-        next();
-      }
-    });
-  } else {
-    next();
-  }
+  console.log("process", process.env.SECRET_KEY);
+  const token = req.headers["authorization"].replace("Bearer ", "");
+  jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
+    if (err) {
+      res.status(401).json({ message: err.message });
+    } else {
+      // add user id to requestss
+      req.body.userId = decoded.id;
+      next();
+    }
+  });
 }
 
 // express doesn't consider not found 404 as an error so we need to handle 404 explicitly
@@ -83,10 +66,8 @@ app.use(function (err, req, res, next) {
   console.log(err);
 
   if (err.status === 404)
-    res
-      .status(404)
-      .json({ status: "error", message: "Not found", url: req.url });
-  else res.status(500).json({ status: "error", message: err.message });
+    res.status(404).json({ message: "Not found", url: req.url });
+  else res.status(500).json({ message: err.message });
 });
 
 const port = process.env.PORT_BACKEND_SRC_SERVER || 21147;
